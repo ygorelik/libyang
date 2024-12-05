@@ -56,6 +56,7 @@ asprintf(char **strp, const char *fmt, ...)
 #endif
 
 #ifndef HAVE_VASPRINTF
+int vsnprintf(char *, unsigned long, const char *, struct __va_list_tag *);
 int
 vasprintf(char **strp, const char *fmt, va_list ap)
 {
@@ -135,6 +136,7 @@ getline(char **lineptr, size_t *n, FILE *stream)
 #endif
 
 #ifndef HAVE_GET_CURRENT_DIR_NAME
+char * strdup(const char *);
 char *
 get_current_dir_name(void)
 {

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.10.1)
 
 # force out-of-source build
 if(NOT FORCE_INSRC_BUILD AND ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
