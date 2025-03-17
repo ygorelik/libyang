@@ -112,13 +112,8 @@ set(CMAKE_C_FLAGS_PACKAGE "-g -O3 -DNDEBUG")
 set(CMAKE_C_FLAGS_DEBUG   "-g -Og")
 
 # options
-if((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL Package))
-    option(ENABLE_BUILD_TESTS "Build tests" ON)
-    option(ENABLE_VALGRIND_TESTS "Build tests with valgrind" ON)
-else()
-    option(ENABLE_BUILD_TESTS "Build tests" OFF)
-    option(ENABLE_VALGRIND_TESTS "Build tests with valgrind" OFF)
-endif()
+option(ENABLE_BUILD_TESTS "Build tests" OFF)
+option(ENABLE_VALGRIND_TESTS "Build tests with valgrind" OFF)
 option(ENABLE_CALLGRIND_TESTS "Build performance tests to be run with callgrind" OFF)
 
 option(ENABLE_CACHE "Enable data caching for schemas and hash tables for data (time-efficient at the cost of increased space-complexity)" ON)
@@ -195,7 +190,7 @@ endif()
 
 # by default build shared library
 # static build requires static libpcre library
-option(ENABLE_STATIC "Build static (.a) library" OFF)
+option(ENABLE_STATIC "Build static (.a) library" ON)
 
 # link compat
 use_compat()
@@ -271,7 +266,7 @@ if(PKG_CONFIG_FOUND)
 endif()
 
 # generate doxygen documentation for libyang API
-libyang_doc()
+# libyang_doc()
 
 # clean cmake cache
 add_custom_target(cclean
@@ -327,19 +322,22 @@ endif()
 configure_file(${PROJECT_SOURCE_DIR}/src/plugin_config.h.in ${PROJECT_BINARY_DIR}/src/plugin_config.h)
 
 # yanglint
-add_executable(yanglint ${lintsrc} $<TARGET_OBJECTS:compat>)
-target_link_libraries(yanglint yang)
-install(TARGETS yanglint DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${PROJECT_SOURCE_DIR}/tools/lint/yanglint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+# MAC OS -- not working
+if(NOT (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
+    add_executable(yanglint ${lintsrc} $<TARGET_OBJECTS:compat>)
+    target_link_libraries(yanglint yang)
+    install(TARGETS yanglint DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(FILES ${PROJECT_SOURCE_DIR}/tools/lint/yanglint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+endif()
 
 #yangre
-add_executable(yangre ${resrc} $<TARGET_OBJECTS:compat>)
-target_link_libraries(yangre yang)
-install(TARGETS yangre DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${PROJECT_SOURCE_DIR}/tools/re/yangre.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+#add_executable(yangre ${resrc} $<TARGET_OBJECTS:compat>)
+#target_link_libraries(yangre yang)
+#install(TARGETS yangre DESTINATION ${CMAKE_INSTALL_BINDIR})
+#install(FILES ${PROJECT_SOURCE_DIR}/tools/re/yangre.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # yang2yin
-add_executable(yang2yin ${yang2yinsrc})
+#add_executable(yang2yin ${yang2yinsrc})
 
 # packages
 add_subdirectory(packages)
